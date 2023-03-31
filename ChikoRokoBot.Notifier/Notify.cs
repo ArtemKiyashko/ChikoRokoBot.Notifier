@@ -37,13 +37,20 @@ namespace ChikoRokoBot.Notifier
 
             await foreach (var user in usersToNotify)
             {
-                await _telegramBotClient.SendPhotoAsync(
-                    chatId: user.ChatId,
-                    replyMarkup: inlineKeyboard,
-                    caption: $"<b>{myQueueItem.Title} - {myQueueItem.Mechanic}</b>",
-                    photo: img,
-                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
-                );
+                try
+                {
+                    await _telegramBotClient.SendPhotoAsync(
+                        chatId: user.ChatId,
+                        replyMarkup: inlineKeyboard,
+                        caption: $"<b>{myQueueItem.Title} - {myQueueItem.Mechanic}</b>",
+                        photo: img,
+                        parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+                    );
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, "Error sending toy to telegram chat id {0}", user.ChatId);
+                }
             }
         }
     }
