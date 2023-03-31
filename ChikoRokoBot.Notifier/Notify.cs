@@ -40,7 +40,7 @@ namespace ChikoRokoBot.Notifier
                 await _telegramBotClient.SendPhotoAsync(
                     chatId: user.ChatId,
                     replyMarkup: inlineKeyboard,
-                    caption: $"<b>{myQueueItem.Title} - {myQueueItem.Mechanic}</b></br></br>{myQueueItem.Description}",
+                    caption: $"<b>{myQueueItem.Title} - {myQueueItem.Mechanic}</b>",
                     photo: img,
                     parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
                 );
