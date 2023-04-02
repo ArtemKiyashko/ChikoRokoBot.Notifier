@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AngleSharp;
 using Azure.Data.Tables;
 using ChikoRokoBot.Notifier.Models;
 using Microsoft.Azure.WebJobs;
@@ -13,45 +14,35 @@ namespace ChikoRokoBot.Notifier
     public class Notify
     {
         private readonly ITelegramBotClient _telegramBotClient;
-        private readonly TableClient _tableClient;
-        private readonly string PARTITION_NAME = "primary";
+        private readonly IBrowsingContext _browsingContext;
 
-        public Notify(ITelegramBotClient telegramBotClient, TableClient tableClient)
+        public Notify(ITelegramBotClient telegramBotClient, IBrowsingContext browsingContext)
         {
             _telegramBotClient = telegramBotClient;
-            _tableClient = tableClient;
+            _browsingContext = browsingContext;
         }
 
         [FunctionName("Notify")]
-        public async Task Run([QueueTrigger("notifydrops", Connection = "AzureWebJobsStorage")]Drop myQueueItem, ILogger log)
+        [FixedDelayRetry(5, "00:00:05")]
+        public async Task Run([QueueTrigger("notifydrops", Connection = "AzureWebJobsStorage")]UserDrop myQueueItem, ILogger log)
         {
-            var img = $"https://chikoroko.b-cdn.net/toys/main/{myQueueItem.Toy.Imageid}.original@2x.webp";
+            var img = $"https://chikoroko.b-cdn.net/toys/main/{myQueueItem.Drop.Toy.Imageid}.original@2x.webp";
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 InlineKeyboardButton.WithUrl(
                     text: "Забрать",
-                    url: $"https://chikoroko.art/shop/toy/{myQueueItem.Toy.Slug}")
+                    url: $"https://chikoroko.art/shop/toy/{myQueueItem.Drop.Toy.Slug}")
             });
 
-            var usersToNotify = _tableClient.QueryAsync<UserTableEntity>($"PartitionKey eq '{PARTITION_NAME}'");
+            var descriptionHtml = await _browsingContext.OpenAsync(req => req.Content(myQueueItem.Drop.Description));
 
-            await foreach (var user in usersToNotify)
-            {
-                try
-                {
-                    await _telegramBotClient.SendPhotoAsync(
-                        chatId: user.ChatId,
-                        replyMarkup: inlineKeyboard,
-                        caption: $"<b>{myQueueItem.Title} - {myQueueItem.Mechanic}</b>",
-                        photo: img,
-                        parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
-                    );
-                }
-                catch (Exception ex)
-                {
-                    log.LogError(ex, "Error sending toy to telegram chat id {0}", user.ChatId);
-                }
-            }
+            await _telegramBotClient.SendPhotoAsync(
+                chatId: myQueueItem.ChatId,
+                replyMarkup: inlineKeyboard,
+                caption: $"<b>{myQueueItem.Drop.Title} - {myQueueItem.Drop.Mechanic}</b>\n\n{descriptionHtml.Body.TextContent}",
+                photo: img,
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+            );
         }
     }
 }

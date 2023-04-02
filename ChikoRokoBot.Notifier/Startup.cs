@@ -1,4 +1,5 @@
 ﻿using System;
+using AngleSharp;
 using Azure.Data.Tables;
 using Azure.Identity;
 using ChikoRokoBot.Notifier.Options;
@@ -25,19 +26,9 @@ namespace ChikoRokoBot.Notifier
             builder.Services.Configure<NotifierOptions>(_functionConfig.GetSection("NotifierOptions"));
             _functionConfig.GetSection("NotifierOptions").Bind(_notifierOptions);
 
-            builder.Services.AddAzureClients(clientBuilder => {
-                clientBuilder.UseCredential(new DefaultAzureCredential());
-                clientBuilder.AddTableServiceClient(_notifierOptions.StorageAccount);
-            });
-
-            builder.Services.AddScoped<TableClient>((factory) => {
-                var service = factory.GetRequiredService<TableServiceClient>();
-                var client = service.GetTableClient(_notifierOptions.UsersTableName);
-                client.CreateIfNotExists();
-                return client;
-            });
-
             builder.Services.AddScoped<ITelegramBotClient>(factory => new TelegramBotClient(_notifierOptions.TelegramBotToken));
+
+            builder.Services.AddTransient<IBrowsingContext>((provider) => { return new BrowsingContext(Configuration.Default.WithDefaultLoader()); });
         }
     }
 }
