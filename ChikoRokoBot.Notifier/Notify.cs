@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AngleSharp;
 using Azure.Data.Tables;
+using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -39,7 +40,7 @@ namespace ChikoRokoBot.Notifier
             await _telegramBotClient.SendPhotoAsync(
                 chatId: myQueueItem.ChatId,
                 replyMarkup: inlineKeyboard,
-                caption: $"<b>{myQueueItem.Drop.Title} - {myQueueItem.Drop.Mechanic}</b>\n\n{descriptionHtml.Body.TextContent}",
+                caption: $"<b>{myQueueItem.Drop.Title} - {myQueueItem.Drop.Mechanic} - {myQueueItem.Drop.Toy.RarityType.GetDescription()}</b>\n\n{descriptionHtml.Body.TextContent}",
                 photo: img,
                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
             );
