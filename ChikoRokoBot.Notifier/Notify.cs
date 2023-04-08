@@ -31,7 +31,7 @@ namespace ChikoRokoBot.Notifier
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 InlineKeyboardButton.WithUrl(
-                    text: "Забрать",
+                    text: "Collect",
                     url: $"https://chikoroko.art/shop/toy/{myQueueItem.Drop.Toy.Slug}")
             });
 
