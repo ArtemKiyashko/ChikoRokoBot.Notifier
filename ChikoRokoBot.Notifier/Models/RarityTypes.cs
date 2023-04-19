@@ -5,7 +5,9 @@ namespace ChikoRokoBot.Notifier.Models
 {
 	public enum RarityTypes
 	{
-		[Description("Common")]
+        [Description("Unknown")]
+        Unknown = 0,
+        [Description("Common")]
 		Common = 2,
         [Description("Rare")]
         Rare = 3,

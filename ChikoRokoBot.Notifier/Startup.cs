@@ -2,6 +2,9 @@
 using AngleSharp;
 using Azure.Data.Tables;
 using Azure.Identity;
+using ChikoRokoBot.Notifier.Factories;
+using ChikoRokoBot.Notifier.Helpers;
+using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Options;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Azure;
@@ -29,6 +32,10 @@ namespace ChikoRokoBot.Notifier
             builder.Services.AddScoped<ITelegramBotClient>(factory => new TelegramBotClient(_notifierOptions.TelegramBotToken));
 
             builder.Services.AddTransient<IBrowsingContext>((provider) => { return new BrowsingContext(Configuration.Default.WithDefaultLoader()); });
+
+            builder.Services.AddSingleton<IDataProviderFactory, DataProviderFactory>();
+            builder.Services.AddScoped<ToyDataProvider>();
+            builder.Services.AddScoped<BlindboxDataProvider>();
         }
     }
 }
