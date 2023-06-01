@@ -9,6 +9,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ChikoRokoBot.Notifier
@@ -39,9 +40,10 @@ namespace ChikoRokoBot.Notifier
 
             await _telegramBotClient.SendPhotoAsync(
                 chatId: myQueueItem.ChatId,
+                messageThreadId: myQueueItem.TopicId,
                 replyMarkup: inlineKeyboard,
                 caption: await dropDataProvider.GetDropCaption(myQueueItem.Drop),
-                photo: await dropDataProvider.GetDropImageUrl(myQueueItem.Drop),
+                photo: InputFile.FromString(await dropDataProvider.GetDropImageUrl(myQueueItem.Drop)),
                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
             );
         }
