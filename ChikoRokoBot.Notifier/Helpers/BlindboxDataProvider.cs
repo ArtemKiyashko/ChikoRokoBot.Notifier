@@ -8,7 +8,7 @@ namespace ChikoRokoBot.Notifier.Helpers
 {
 	public class BlindboxDataProvider : IDropDataProvider
 	{
-        public Task<string> GetDropCaption(Drop drop) => Task.FromResult($"<b>{drop.Title} - {drop.Mechanic}</b>");
+        public Task<string> GetDropCaption(Drop drop) => Task.FromResult(TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic}*"));
 
         public Task<string> GetDropImageUrl(Drop drop) => Task.FromResult("https://chikoroko.b-cdn.net/blindbox/orange.original@2x.webp");
 

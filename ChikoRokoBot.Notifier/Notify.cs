@@ -44,7 +44,7 @@ namespace ChikoRokoBot.Notifier
                 replyMarkup: inlineKeyboard,
                 caption: await dropDataProvider.GetDropCaption(myQueueItem.Drop),
                 photo: InputFile.FromString(await dropDataProvider.GetDropImageUrl(myQueueItem.Drop)),
-                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.MarkdownV2
             );
         }
     }

@@ -10,6 +10,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReverseMarkdown;
 using Telegram.Bot;
 
 [assembly: FunctionsStartup(typeof(ChikoRokoBot.Notifier.Startup))]
@@ -36,6 +37,7 @@ namespace ChikoRokoBot.Notifier
             builder.Services.AddSingleton<IDataProviderFactory, DataProviderFactory>();
             builder.Services.AddScoped<ToyDataProvider>();
             builder.Services.AddScoped<BlindboxDataProvider>();
+            builder.Services.AddSingleton<Converter>(new Converter());
         }
     }
 }
