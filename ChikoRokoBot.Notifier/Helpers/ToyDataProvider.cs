@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AngleSharp;
-using Azure.Storage.Queues.Models;
 using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;

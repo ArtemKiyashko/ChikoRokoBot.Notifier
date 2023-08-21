@@ -1,12 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using AngleSharp;
-using Azure.Data.Tables;
-using ChikoRokoBot.Notifier.Extensions;
+﻿using System.Threading.Tasks;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
