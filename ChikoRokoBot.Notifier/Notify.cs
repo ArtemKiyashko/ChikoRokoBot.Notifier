@@ -29,6 +29,9 @@ namespace ChikoRokoBot.Notifier
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 InlineKeyboardButton.WithUrl(
+                    text: "Home Page",
+                    url: "https://chikoroko.art/"),
+                InlineKeyboardButton.WithUrl(
                     text: "Collect",
                     url: await dropDataProvider.GetDropUrl(myQueueItem.Drop))
             });

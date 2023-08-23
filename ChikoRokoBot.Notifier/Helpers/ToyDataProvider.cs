@@ -28,7 +28,7 @@ namespace ChikoRokoBot.Notifier.Helpers
         }
 
         public Task<string> GetDropImageUrl(Drop drop) => Task.FromResult($"https://chikoroko.b-cdn.net/toys/main/{drop.Toy.Imageid}.original@2x.webp");
-        public Task<string> GetDropUrl(Drop drop) => Task.FromResult($"https://chikoroko.art/");
+        public Task<string> GetDropUrl(Drop drop) => Task.FromResult($"https://chikoroko.art/en/shop/toy/{drop.Toy.Slug}");
     }
 }
 
