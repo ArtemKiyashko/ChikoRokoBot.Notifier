@@ -3,6 +3,7 @@ using AngleSharp;
 using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;
+using Microsoft.Extensions.Logging;
 using ReverseMarkdown;
 
 namespace ChikoRokoBot.Notifier.Helpers
@@ -11,11 +12,13 @@ namespace ChikoRokoBot.Notifier.Helpers
     {
         private readonly IBrowsingContext _browsingContext;
         private readonly Converter _converter;
+        private readonly ILogger<ToyDataProvider> _logger;
 
-        public ToyDataProvider(IBrowsingContext browsingContext, Converter converter)
+        public ToyDataProvider(IBrowsingContext browsingContext, Converter converter, ILogger<ToyDataProvider> logger)
         {
             _browsingContext = browsingContext;
             _converter = converter;
+            _logger = logger;
         }
 
         public async Task<string> GetDropCaption(Drop drop)
@@ -24,7 +27,11 @@ namespace ChikoRokoBot.Notifier.Helpers
 
             var markdown = _converter.Convert(descriptionHtml.Body.InnerHtml);
 
-            return TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\n{markdown}");
+            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\n{markdown}");
+
+            _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
+
+            return sanitizedCaption;
         }
 
         public Task<string> GetDropImageUrl(Drop drop) => Task.FromResult($"https://chikoroko.b-cdn.net/toys/main/{drop.Toy.Imageid}.original@2x.webp");
