@@ -8,10 +8,10 @@
             },
             "snapshotConfiguration": {
                 "isEnabled": true
-            },
-            "logLevel": {
-                "ChikoRokoBot.Notifier.Helpers.ToyDataProvider": "Information"
             }
+        },
+        "logLevel": {
+            "ChikoRokoBot.Notifier.Helpers.ToyDataProvider": "Information"
         }
     }
 }
