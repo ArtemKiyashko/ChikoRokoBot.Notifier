@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Interfaces;
 
 namespace ChikoRokoBot.Notifier.Helpers
@@ -8,7 +9,7 @@ namespace ChikoRokoBot.Notifier.Helpers
     {
         public static string Sanitize(string content)
         {
-            StringBuilder builder = new StringBuilder(content);
+            StringBuilder builder = new StringBuilder(content.LimitTo(1024));
 
             builder
                 .Replace("-", "\\-")

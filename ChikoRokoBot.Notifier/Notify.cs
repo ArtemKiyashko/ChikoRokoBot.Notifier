@@ -21,7 +21,6 @@ namespace ChikoRokoBot.Notifier
         }
 
         [FunctionName("Notify")]
-        [FixedDelayRetry(5, "00:00:05")]
         public async Task Run([QueueTrigger("notifydrops", Connection = "AzureWebJobsStorage")]UserDrop myQueueItem, ILogger log)
         {
             var dropDataProvider = _dataProviderFactory.GetDropDataProvider(myQueueItem.Drop);
