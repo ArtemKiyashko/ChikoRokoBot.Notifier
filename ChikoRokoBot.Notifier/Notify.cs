@@ -29,7 +29,7 @@ namespace ChikoRokoBot.Notifier
             {
                 InlineKeyboardButton.WithUrl(
                     text: "Home Page",
-                    url: "https://chikoroko.art/"),
+                    url: "https://artoys.app/"),
                 InlineKeyboardButton.WithUrl(
                     text: "Collect",
                     url: await dropDataProvider.GetDropUrl(myQueueItem.Drop))
