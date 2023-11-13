@@ -9,6 +9,8 @@ namespace ChikoRokoBot.Notifier.Interfaces
 		public Task<string> GetDropUrl(Drop drop);
 		public Task<string> GetDropImageUrl(Drop drop);
         public Task<string> GetDropCaption(Drop drop);
+		public Task<string> GetDropModelUsdz(Drop drop);
+        public Task<string> GetDropModelGlb(Drop drop);
     }
 }
 
