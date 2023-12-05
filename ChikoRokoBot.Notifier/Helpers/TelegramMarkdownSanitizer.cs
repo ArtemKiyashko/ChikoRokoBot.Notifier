@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using ChikoRokoBot.Notifier.Extensions;
-using ChikoRokoBot.Notifier.Interfaces;
 
 namespace ChikoRokoBot.Notifier.Helpers
 {
@@ -18,7 +16,9 @@ namespace ChikoRokoBot.Notifier.Helpers
                 .Replace("<u>", string.Empty)
                 .Replace("</u>", string.Empty)
                 .Replace("`", "\\`")
-                .Replace("=", "\\=");
+                .Replace("=", "\\=")
+                .Replace("(", "\\(")
+                .Replace(")", "\\)");
 
             return builder.ToString();
         }
