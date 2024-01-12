@@ -16,6 +16,9 @@ namespace ChikoRokoBot.Notifier.Models
         [property: JsonPropertyName("code")] IReadOnlyList<string> Code,
         [property: JsonPropertyName("blindBoxId")] int? BlindBoxId,
         [property: JsonPropertyName("toy")] Toy Toy
-    );
+    )
+    {
+        [property: JsonPropertyName("markdownDescription")] public string MarkdownDescription { get; set; }
+    }
 }
 

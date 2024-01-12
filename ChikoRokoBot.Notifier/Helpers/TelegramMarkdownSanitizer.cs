@@ -3,7 +3,7 @@ using ChikoRokoBot.Notifier.Extensions;
 
 namespace ChikoRokoBot.Notifier.Helpers
 {
-	public class TelegramMarkdownSanitizer
+    public class TelegramMarkdownSanitizer
     {
         public static string Sanitize(string content)
         {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ChikoRokoBot.Notifier.Extensions;
+﻿using System.Threading.Tasks;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;
 
