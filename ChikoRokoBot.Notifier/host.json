@@ -11,7 +11,9 @@
             }
         },
         "logLevel": {
-            "ChikoRokoBot.Notifier.Helpers.ToyDataProvider": "Information"
+            "ChikoRokoBot.Notifier.Helpers.ToyDataProvider": "Information",
+            "ChikoRokoBot.Notifier.Clients.UserApiClient": "Information",
+            "ChikoRokoBot.Notifier.Notify": "Information"
         }
     },
     "extensions": {

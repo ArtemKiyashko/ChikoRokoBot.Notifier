@@ -1,13 +1,10 @@
-﻿using System;
-using AngleSharp;
-using Azure.Data.Tables;
-using Azure.Identity;
+﻿using AngleSharp;
+using ChikoRokoBot.Notifier.Clients;
 using ChikoRokoBot.Notifier.Factories;
 using ChikoRokoBot.Notifier.Helpers;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Options;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ReverseMarkdown;
@@ -38,6 +35,11 @@ namespace ChikoRokoBot.Notifier
             builder.Services.AddScoped<ToyDataProvider>();
             builder.Services.AddScoped<BlindboxDataProvider>();
             builder.Services.AddSingleton<Converter>(new Converter());
+            builder.Services.AddHttpClient<UserApiClient>(client =>
+            {
+                client.BaseAddress = _notifierOptions.UserApiBaseAddress;
+                client.DefaultRequestHeaders.Add("x-functions-key", _notifierOptions.UserApiKey);
+            });
         }
     }
 }

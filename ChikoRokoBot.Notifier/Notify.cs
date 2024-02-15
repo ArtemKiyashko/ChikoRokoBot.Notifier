@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChikoRokoBot.Notifier.Clients;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -14,15 +16,23 @@ namespace ChikoRokoBot.Notifier
     {
         private readonly ITelegramBotClient _telegramBotClient;
         private readonly IDataProviderFactory _dataProviderFactory;
+        private readonly UserApiClient _userApiClient;
+        private readonly ILogger<Notify> _logger;
 
-        public Notify(ITelegramBotClient telegramBotClient, IDataProviderFactory dataProviderFactory)
+        public Notify(
+            ITelegramBotClient telegramBotClient,
+            IDataProviderFactory dataProviderFactory,
+            UserApiClient userApiClient,
+            ILogger<Notify> logger)
         {
             _telegramBotClient = telegramBotClient;
             _dataProviderFactory = dataProviderFactory;
+            _userApiClient = userApiClient;
+            _logger = logger;
         }
 
         [FunctionName("Notify")]
-        public async Task Run([QueueTrigger("notifydrops", Connection = "AzureWebJobsStorage")]UserDrop myQueueItem, ILogger log)
+        public async Task Run([QueueTrigger("notifydrops", Connection = "AzureWebJobsStorage")]UserDrop myQueueItem)
         {
             var dropDataProvider = _dataProviderFactory.GetDropDataProvider(myQueueItem.Drop);
 
@@ -33,14 +43,22 @@ namespace ChikoRokoBot.Notifier
 
             InlineKeyboardMarkup inlineKeyboardMarkup = new(buttons);
 
-            await _telegramBotClient.SendPhotoAsync(
-                chatId: myQueueItem.ChatId,
-                messageThreadId: myQueueItem.TopicId,
-                replyMarkup: inlineKeyboardMarkup,
-                caption: await dropDataProvider.GetDropCaption(myQueueItem.Drop),
-                photo: InputFile.FromString(await dropDataProvider.GetDropImageUrl(myQueueItem.Drop)),
-                parseMode: Telegram.Bot.Types.Enums.ParseMode.MarkdownV2
-            );
+            try
+            {
+                await _telegramBotClient.SendPhotoAsync(
+                    chatId: myQueueItem.ChatId,
+                    messageThreadId: myQueueItem.TopicId,
+                    replyMarkup: inlineKeyboardMarkup,
+                    caption: await dropDataProvider.GetDropCaption(myQueueItem.Drop),
+                    photo: InputFile.FromString(await dropDataProvider.GetDropImageUrl(myQueueItem.Drop)),
+                    parseMode: Telegram.Bot.Types.Enums.ParseMode.MarkdownV2
+                );
+            }
+            catch (ApiRequestException ex) when (ex.ErrorCode == 403)
+            {
+                _logger.LogError(ex, $"User restricted bot access. ChatId: {myQueueItem.ChatId}");
+                await _userApiClient.DeleteUser(myQueueItem.ChatId.Value);
+            }
         }
 
         private static async Task<InlineKeyboardButton[]> GetPrimaryButtons(UserDrop myQueueItem, IDropDataProvider dropDataProvider)
