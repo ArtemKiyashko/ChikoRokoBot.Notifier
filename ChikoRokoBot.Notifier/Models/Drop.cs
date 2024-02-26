@@ -13,8 +13,10 @@ namespace ChikoRokoBot.Notifier.Models
         [property: JsonPropertyName("start")] DateTime Start,
         [property: JsonPropertyName("toyid")] int? Toyid,
         [property: JsonPropertyName("mechanic")] string Mechanic,
-        [property: JsonPropertyName("code")] IReadOnlyList<string> Code,
+        [property: JsonPropertyName("allowedCountries")] IReadOnlyList<object> AllowedCountries,
         [property: JsonPropertyName("blindBoxId")] int? BlindBoxId,
+        [property: JsonPropertyName("alternativeCollect")] string AlternativeCollect,
+        [property: JsonPropertyName("order")] int Order,
         [property: JsonPropertyName("toy")] Toy Toy
     );
 }
