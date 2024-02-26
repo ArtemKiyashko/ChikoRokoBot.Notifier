@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AngleSharp;
 using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Interfaces;
@@ -27,7 +28,14 @@ namespace ChikoRokoBot.Notifier.Helpers
 
             var markdown = _converter.Convert(descriptionHtml.Body.InnerHtml);
 
-            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\n{markdown}");
+            var tags = string.Empty;
+
+            if (drop.Toy.Tags.Any())
+            {
+                tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
+            }
+
+            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\n{markdown}\n\n{tags}");
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 

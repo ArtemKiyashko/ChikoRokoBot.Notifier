@@ -18,7 +18,8 @@ namespace ChikoRokoBot.Notifier.Helpers
                 .Replace("`", "\\`")
                 .Replace("=", "\\=")
                 .Replace("(", "\\(")
-                .Replace(")", "\\)");
+                .Replace(")", "\\)")
+                .Replace("#", "\\#");
 
             return builder.ToString();
         }
