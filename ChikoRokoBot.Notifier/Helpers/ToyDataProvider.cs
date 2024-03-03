@@ -24,7 +24,7 @@ namespace ChikoRokoBot.Notifier.Helpers
 
         public async Task<string> GetDropCaption(Drop drop)
         {
-            var descriptionHtml = await _browsingContext.OpenAsync(req => req.Content(drop.Description));
+            var descriptionHtml = await _browsingContext.OpenAsync(req => req.Content(drop.Toy.Description));
 
             var markdown = _converter.Convert(descriptionHtml.Body.InnerHtml);
 
@@ -35,7 +35,7 @@ namespace ChikoRokoBot.Notifier.Helpers
                 tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
             }
 
-            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Title} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\n{markdown}\n\n{tags}");
+            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\nSupplied:{drop.Toy.Supplied}\nAvailable:{drop.Toy.Available}\nOwned:{drop.Toy.Owned}\nReserved:{drop.Toy.Reserved}\n\n{markdown}\n\n{tags}");
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 
