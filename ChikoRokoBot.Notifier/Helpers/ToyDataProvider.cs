@@ -35,7 +35,7 @@ namespace ChikoRokoBot.Notifier.Helpers
                 tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
             }
 
-            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\nSupplied: {drop.Toy.Supplied ?? 0}\nAvailable: {drop.Toy.Available ?? 0}\nOwned: {drop.Toy.Owned ?? 0}\nReserved: {drop.Toy.Reserved ?? 0}\n\n{markdown}\n\n{tags}");
+            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription()}*\n\nSupplied: {drop.Toy.Supplied ?? 0}\n\n{markdown}\n\n{tags}");
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 
