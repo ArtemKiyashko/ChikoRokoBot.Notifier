@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
+﻿using System.ComponentModel;
 
 namespace ChikoRokoBot.Notifier.Extensions
 {
@@ -9,6 +6,8 @@ namespace ChikoRokoBot.Notifier.Extensions
 	{
         public static string GetDescription<T>(this T val)
         {
+            if (val is null) return default;
+
             DescriptionAttribute[] attributes = (DescriptionAttribute[])val
                .GetType()
                .GetField(val.ToString())?
