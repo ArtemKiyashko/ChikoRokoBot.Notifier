@@ -34,7 +34,7 @@ namespace ChikoRokoBot.Notifier
             builder.Services.AddSingleton<IDataProviderFactory, DataProviderFactory>();
             builder.Services.AddScoped<ToyDataProvider>();
             builder.Services.AddScoped<BlindboxDataProvider>();
-            builder.Services.AddSingleton<Converter>(new Converter());
+            builder.Services.AddSingleton<Converter>(new Converter(new Config { UnknownTags = Config.UnknownTagsOption.Bypass }));
             builder.Services.AddHttpClient<UserApiClient>(client =>
             {
                 client.BaseAddress = _notifierOptions.UserApiBaseAddress;
