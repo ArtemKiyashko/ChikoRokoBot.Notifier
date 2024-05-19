@@ -29,7 +29,7 @@ namespace ChikoRokoBot.Notifier.Helpers
                 tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
             }
 
-            var sanitizedCaption = $"<b>{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}</b>\n\nSupplied: {drop.Toy.Supplied ?? 0}\n\n{_sanitizer.Sanitize(drop.Toy.Description)}\n\n{tags}";
+            var sanitizedCaption = $"<b>{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}</b>\n\nSupplied: {drop.Toy.Supplied ?? 0}\n{_sanitizer.Sanitize(drop.Toy.Description)}\n{tags}";
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 

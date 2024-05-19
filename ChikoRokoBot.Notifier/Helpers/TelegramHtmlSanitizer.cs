@@ -52,13 +52,20 @@ namespace ChikoRokoBot.Notifier.Helpers
         {
             if (tag.Children.Any())
             {
+                tag.InnerHtml = WrapTag(tag);
                 tag.Replace(tag.ChildNodes.ToArray());
             }
             else
             {
-                tag.OuterHtml = tag.InnerHtml;
+                tag.OuterHtml = WrapTag(tag);
             }
         }
+
+        private static string WrapTag(IElement tag) => tag.TagName.ToLower() switch
+        {
+            "p" => $"\n{tag.InnerHtml}\n",
+            _ => tag.InnerHtml,
+        };
     }    
 }
 
