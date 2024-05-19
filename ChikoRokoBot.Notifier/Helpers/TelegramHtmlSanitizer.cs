@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using AngleSharp.Dom;
 using ChikoRokoBot.Notifier.Interfaces;
 using Ganss.Xss;
@@ -49,7 +48,7 @@ namespace ChikoRokoBot.Notifier.Helpers
             UnwrapTag(args.Tag);
         }
 
-        private void UnwrapTag(IElement tag)
+        private static void UnwrapTag(IElement tag)
         {
             if (tag.Children.Any())
             {
