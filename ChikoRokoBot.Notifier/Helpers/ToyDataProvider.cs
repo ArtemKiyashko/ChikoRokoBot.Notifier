@@ -1,33 +1,27 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp;
 using ChikoRokoBot.Notifier.Extensions;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Models;
 using Microsoft.Extensions.Logging;
-using ReverseMarkdown;
 
 namespace ChikoRokoBot.Notifier.Helpers
 {
     public class ToyDataProvider : IDropDataProvider
     {
-        private readonly IBrowsingContext _browsingContext;
-        private readonly Converter _converter;
         private readonly ILogger<ToyDataProvider> _logger;
+        private readonly ITelegramHtmlSanitizer _sanitizer;
 
-        public ToyDataProvider(IBrowsingContext browsingContext, Converter converter, ILogger<ToyDataProvider> logger)
+        public ToyDataProvider(
+            ILogger<ToyDataProvider> logger,
+            ITelegramHtmlSanitizer sanitizer)
         {
-            _browsingContext = browsingContext;
-            _converter = converter;
             _logger = logger;
+            _sanitizer = sanitizer;
         }
 
-        public async Task<string> GetDropCaption(Drop drop)
+        public Task<string> GetDropCaption(Drop drop)
         {
-            var descriptionHtml = await _browsingContext.OpenAsync(req => req.Content(drop.Toy.Description));
-
-            var markdown = _converter.Convert(descriptionHtml.Body.InnerHtml);
-
             var tags = string.Empty;
 
             if (drop.Toy.Tags.Any())
@@ -35,11 +29,11 @@ namespace ChikoRokoBot.Notifier.Helpers
                 tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
             }
 
-            var sanitizedCaption = TelegramMarkdownSanitizer.Sanitize($"*{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}*\n\nSupplied: {drop.Toy.Supplied ?? 0}\n\n{markdown}\n\n{tags}");
+            var sanitizedCaption = $"<b>{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}</b>\n\nSupplied: {drop.Toy.Supplied ?? 0}\n\n{_sanitizer.Sanitize(drop.Toy.Description)}\n\n{tags}";
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 
-            return sanitizedCaption;
+            return Task.FromResult(sanitizedCaption);
         }
 
         public Task<string> GetDropImageUrl(Drop drop) => Task.FromResult($"https://chikoroko.b-cdn.net/toys/main/{drop.Toy.Imageid}.original@2x.webp");

@@ -51,7 +51,7 @@ namespace ChikoRokoBot.Notifier
                     replyMarkup: inlineKeyboardMarkup,
                     caption: await dropDataProvider.GetDropCaption(myQueueItem.Drop),
                     photo: InputFile.FromString(await dropDataProvider.GetDropImageUrl(myQueueItem.Drop)),
-                    parseMode: Telegram.Bot.Types.Enums.ParseMode.MarkdownV2
+                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
                 );
             }
             catch (ApiRequestException ex) when (ex.ErrorCode == 403)

@@ -4,10 +4,10 @@ using ChikoRokoBot.Notifier.Factories;
 using ChikoRokoBot.Notifier.Helpers;
 using ChikoRokoBot.Notifier.Interfaces;
 using ChikoRokoBot.Notifier.Options;
+using Ganss.Xss;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ReverseMarkdown;
 using Telegram.Bot;
 
 [assembly: FunctionsStartup(typeof(ChikoRokoBot.Notifier.Startup))]
@@ -34,12 +34,13 @@ namespace ChikoRokoBot.Notifier
             builder.Services.AddSingleton<IDataProviderFactory, DataProviderFactory>();
             builder.Services.AddScoped<ToyDataProvider>();
             builder.Services.AddScoped<BlindboxDataProvider>();
-            builder.Services.AddSingleton<Converter>(new Converter(new Config { UnknownTags = Config.UnknownTagsOption.Bypass }));
             builder.Services.AddHttpClient<UserApiClient>(client =>
             {
                 client.BaseAddress = _notifierOptions.UserApiBaseAddress;
                 client.DefaultRequestHeaders.Add("x-functions-key", _notifierOptions.UserApiKey);
             });
+            builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(factory => new HtmlSanitizer());
+            builder.Services.AddScoped<ITelegramHtmlSanitizer, TelegramHtmlSanitizer>();
         }
     }
 }
