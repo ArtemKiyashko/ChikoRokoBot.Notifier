@@ -19,7 +19,8 @@ namespace ChikoRokoBot.Notifier.Helpers
                 .Replace("=", "\\=")
                 .Replace("(", "\\(")
                 .Replace(")", "\\)")
-                .Replace("#", "\\#");
+                .Replace("#", "\\#")
+                .Replace("utm_source", "utm\\_source");
 
             return builder.ToString();
         }
