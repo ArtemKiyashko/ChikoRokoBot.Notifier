@@ -26,7 +26,6 @@ namespace ChikoRokoBot.Notifier.Helpers
             _sanitizer.AllowedTags.Add("s");
             _sanitizer.AllowedTags.Add("strike");
             _sanitizer.AllowedTags.Add("del");
-            _sanitizer.AllowedTags.Add("span");
             _sanitizer.AllowedTags.Add("a");
             _sanitizer.AllowedTags.Add("tg-emoji");
             _sanitizer.AllowedTags.Add("code");
@@ -52,8 +51,9 @@ namespace ChikoRokoBot.Notifier.Helpers
         {
             if (tag.Children.Any())
             {
-                tag.InnerHtml = WrapTag(tag);
+                var tempUnwrapTag = WrapTag(tag);
                 tag.Replace(tag.ChildNodes.ToArray());
+                tag.InnerHtml = tempUnwrapTag;
             }
             else
             {
@@ -64,6 +64,7 @@ namespace ChikoRokoBot.Notifier.Helpers
         private static string WrapTag(IElement tag) => tag.TagName.ToLower() switch
         {
             "p" => $"\n{tag.InnerHtml}\n",
+            "span" => $"\n{tag.InnerHtml}\n",
             _ => tag.InnerHtml,
         };
     }    
