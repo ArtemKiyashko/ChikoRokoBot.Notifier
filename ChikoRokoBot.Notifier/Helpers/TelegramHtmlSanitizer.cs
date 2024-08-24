@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using AngleSharp.Dom;
-using ChikoRokoBot.Notifier.Interfaces;
+﻿using ChikoRokoBot.Notifier.Interfaces;
 using Ganss.Xss;
 
 namespace ChikoRokoBot.Notifier.Helpers
@@ -36,37 +34,10 @@ namespace ChikoRokoBot.Notifier.Helpers
             _sanitizer.AllowedAttributes.Add("class");
             _sanitizer.AllowedAttributes.Add("emoji-id");
 
-            _sanitizer.RemovingTag += UnwrapTag;
+            _sanitizer.KeepChildNodes = true;
         }
 
         public string Sanitize(string html) => _sanitizer.Sanitize(html);
-
-        private void UnwrapTag(object sender, RemovingTagEventArgs args)
-        {
-            args.Cancel = true;
-            UnwrapTag(args.Tag);
-        }
-
-        private static void UnwrapTag(IElement tag)
-        {
-            if (tag.Children.Any())
-            {
-                var tempUnwrapTag = WrapTag(tag);
-                tag.Replace(tag.ChildNodes.ToArray());
-                tag.InnerHtml = tempUnwrapTag;
-            }
-            else
-            {
-                tag.OuterHtml = WrapTag(tag);
-            }
-        }
-
-        private static string WrapTag(IElement tag) => tag.TagName.ToLower() switch
-        {
-            "p" => $"\n{tag.InnerHtml}\n",
-            "span" => $"\n{tag.InnerHtml}\n",
-            _ => tag.InnerHtml,
-        };
     }    
 }
 

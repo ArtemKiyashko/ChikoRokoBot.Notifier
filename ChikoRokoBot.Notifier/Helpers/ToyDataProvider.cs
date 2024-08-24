@@ -23,13 +23,19 @@ namespace ChikoRokoBot.Notifier.Helpers
         public Task<string> GetDropCaption(Drop drop)
         {
             var tags = string.Empty;
+            var captionBuilder = new CaptionBuilder();
 
             if (drop.Toy.Tags.Any())
             {
                 tags = drop.Toy.Tags.Count > 1 ? drop.Toy.Tags.Aggregate((f, s) => $"#{f} #{s}") : $"#{drop.Toy.Tags[0]}";
             }
 
-            var sanitizedCaption = $"<b>{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}</b>\n\nSupplied: {drop.Toy.Supplied ?? 0}\n{_sanitizer.Sanitize(drop.Toy.Description)}\n{tags}";
+            var sanitizedCaption = captionBuilder
+                .AddSection($"<b>{drop.Toy.Name} - {drop.Mechanic} - {drop.Toy.RarityType.GetDescription() ?? "Open edition"}</b>")
+                .AddSection($"Supplied: {drop.Toy.Supplied ?? 0}")
+                .AddSection($"{_sanitizer.Sanitize(drop.Toy.Description)}")
+                .AddSection($"{tags}")
+                .Build();
 
             _logger.LogInformation($"Sanitized caption: {sanitizedCaption}");
 
