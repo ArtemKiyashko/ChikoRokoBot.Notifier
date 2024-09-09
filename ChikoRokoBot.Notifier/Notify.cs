@@ -65,7 +65,7 @@ namespace ChikoRokoBot.Notifier
         {
             InlineKeyboardButton homePage = InlineKeyboardButton.WithUrl(
                                 text: "Home Page",
-                                url: "https://artoys.app/");
+                                url: "https://r.toys/");
 
             InlineKeyboardButton collectPage = InlineKeyboardButton.WithUrl(
                     text: "Collect",

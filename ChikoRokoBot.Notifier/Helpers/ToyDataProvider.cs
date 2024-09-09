@@ -48,7 +48,7 @@ namespace ChikoRokoBot.Notifier.Helpers
 
         public Task<string> GetDropModelUsdz(Drop drop) => Task.FromResult(drop.Toy.ModelUrlUsdz);
 
-        public Task<string> GetDropUrl(Drop drop) => Task.FromResult($"https://artoys.app/en/toy/{drop.Toy.Slug}");
+        public Task<string> GetDropUrl(Drop drop) => Task.FromResult($"https://r.toys/en/toy/{drop.Toy.Slug}");
     }
 }
 
